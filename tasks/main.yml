@@ -1,5 +1,5 @@
 ---
-- name: download docker-machine exe
+- name: Download docker-machine binary package.
   become: yes
   become_user: root
   get_url:
@@ -15,3 +15,38 @@
     src: '{{ dockermachine_install_dir }}/{{ dockermachine_target }}'
     dest: '{{ dockermachine_install_dir }}/docker-machine'
     state: link
+
+- name: Ensure libvirt and qemu-related packages are installed if driver kvm enabled.
+  become: yes
+  package:
+    name: "{{ kvm_packages }}"
+    state: present
+  when: dockermachine_driver_kvm_enabled
+
+- name: Add dockermachine_kvm_user to libvirt group.
+  become: yes
+  user:
+    name: '{{ dockermachine_kvm_user }}'
+    groups: libvirt
+    append: yes
+
+
+- name: Download docker-machine-driver-kvm binary package for centos7 if driver kvm enabled.
+  become: yes
+  become_user: root
+  get_url:
+    url: '{{ dockermachine_driver_kvm_url.centos7 }}'
+    dest: '{{ dockermachine_install_dir }}/{{ driver_kvm_target }}'
+    mode: '0755'
+    checksum: '{{ dockermachine_driver_kvm_checksums.centos7 }}'
+  when: dockermachine_driver_kvm_enabled and ansible_os_family == "RedHat"
+
+- name: Download docker-machine-driver-kvm binary package for ubuntu1604 if driver kvm enabled.
+  become: yes
+  become_user: root
+  get_url:
+    url: '{{ dockermachine_driver_kvm_url.ubuntu1604 }}'
+    dest: '{{ dockermachine_install_dir }}/{{ driver_kvm_target }}'
+    mode: '0755'
+    checksum: '{{ dockermachine_driver_kvm_checksums.ubuntu1604 }}'
+  when: dockermachine_driver_kvm_enabled and ansible_os_family == "Debian"

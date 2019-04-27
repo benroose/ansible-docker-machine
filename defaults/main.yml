@@ -44,3 +44,17 @@ dockermachine_checksums:
     Windows-x86_64.exe: sha256:2d3b55682b704f9d61b74d1db9b4f6ddbb4f80302c4333aef7e5dc746049b1d9
 dockermachine_install_dir: /usr/local/bin
 dockermachine_mirror: https://github.com/docker/machine/releases/download
+
+## docker-machine kvm driver
+dockermachine_driver_kvm_enabled: no
+dockermachine_kvm_user: "{{ ansible_ssh_user }}"
+
+dockermachine_driver_kvm_ver: v0.10.1
+dockermachine_driver_kvm_mirror: https://github.com/tdilauro/docker-machine-kvm/releases/download/
+#https://github.com/dhiltgen/docker-machine-kvm/releases/download/v0.10.0/docker-machine-driver-kvm-centos7
+dockermachine_driver_kvm_url:
+  centos7: '{{ dockermachine_driver_kvm_mirror }}/{{ dockermachine_driver_kvm_ver }}/docker-machine-driver-kvm-centos7'
+  ubuntu1604: '{{ dockermachine_driver_kvm_mirror }}/{{ dockermachine_driver_kvm_ver }}/docker-machine-driver-kvm-ubuntu16.04'
+dockermachine_driver_kvm_checksums:
+  centos7: sha256:0a92654b369e01530ffc3d22860ebf48f843766ed715008f9154996d4e837bec
+  ubuntu1604: sha256:97f215ac0b466cc410ddd370263ad5ccb85e3b5cb199db04bce30e539b218dca
